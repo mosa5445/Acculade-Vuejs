@@ -5,7 +5,7 @@
       <adminMenu></adminMenu>
       <div class="container-fluid">
         <div class="col-lg-8 col-md-10 col-sm-12" id="list">
-          <form @submit.prevent="submit">
+          <form @submit.prevent="submit" :class="{blur : serverSuccess}">
             <h3 class="my-4">انتشار دوره در آکولاد</h3>
 
             <div class="input-group my-3">
@@ -76,6 +76,12 @@
             <p v-if="err.price" class="my-3" style="color:red;font-size:0.8rem;">{{err.price}}</p>
             <button class="newcourse">انتشار دوره تازه</button>
           </form>
+          <div class="err-box" v-if="serverErr">
+            <span>{{msg}}</span>
+          </div>
+          <div class="success-box" v-if="serverSuccess">
+            <span>{{msg}}</span>
+          </div>
         </div>
       </div>
     </div>
@@ -98,7 +104,10 @@ export default {
       type: "free",
       price: "",
       tag: "",
-      err: { slug: "", title: "", content: "", file: "", price: "" }
+      err: { slug: "", title: "", content: "", file: "", price: "" },
+      serverErr: false,
+      serverSuccess: false,
+      msg: ""
     };
   },
   methods: {
@@ -166,9 +175,18 @@ export default {
             url: "http://localhost:4000/admin/submit-new-course",
             data: formData
           });
-          console.log("res", res.data);
+           this.serverErr = false;
+           this.msg = '';
+           this.serverSuccess = true;
+           this.msg = res.data.msg;
         } catch (err) {
-          console.log("err", err, " ", err.response);
+          this.serverSuccess = false;
+          this.msg = '';
+          this.serverErr = true;
+          if (err.response.data.err) this.msg =err.response.data.err;
+          else if (err.response.status == 401) this.msg = 'لطفا دوباره وارد سایت شوید';
+          else this.msg = 'به نظر میاد که یه مشکلی هست ، لطفا دوباره امتحان کن';
+          console.log("err", err, " ", err.response.data);
         }
       } 
     }
@@ -209,5 +227,31 @@ export default {
 }
 .newcourse:hover {
   background-color: #82c53b;
+}
+.err-box {
+  text-align: center;
+  background-color: #d32f2f;
+  border-radius: 5px;
+  color: #fff;
+  padding: 10px;
+  margin: 0 30px;
+  font-size: 0.9rem;
+}
+.success-box {
+  text-align: center;
+  background-color: #4caf50;
+  border-radius: 5px;
+  color: #fff;
+  padding: 10px;
+  margin: 10px 30px;
+  font-size: 0.9rem;
+  
+}
+.blur {
+  -webkit-filter: blur(5px);
+  -moz-filter: blur(5px);
+  -o-filter: blur(5px);
+  -ms-filter: blur(5px);
+  filter: blur(5px);
 }
 </style>
