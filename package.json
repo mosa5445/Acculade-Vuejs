@@ -16,7 +16,8 @@
     "core-js": "^2.6.5",
     "validator": "^10.11.0",
     "vue": "^2.6.10",
-    "vue-router": "^3.0.1"
+    "vue-router": "^3.0.1",
+    "vuejs-paginate": "^2.1.0"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "^3.5.0",
