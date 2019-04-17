@@ -5,7 +5,7 @@
       <adminMenu></adminMenu>
       <div class="container-fluid">
         <div class="com-lg-8 col-md-10 col-sm-12" id="list">
-          <router-link tag="button" class="newcourse" to="/">ایجاد دوره جدید</router-link>
+          <router-link tag="button" class="newcourse" to="/admin/new-course">ایجاد دوره جدید</router-link>
           <div class="course" v-for="course in courses" :key="course._id">
             <div class="d-flex justify-content-between align-items-center flex-wrap">
               <div
@@ -41,16 +41,18 @@
               </div>
 
               <div class="d-flex justify-content-around btnbox flex-fill flex-wrap">
-                <router-link to="#" tag="button" id="edit" class="mybtn">ویرایش دوره</router-link>
-                <router-link to="#" tag="button" id="remove" class="mybtn">حذف دوره</router-link>
+                <button id="edit" class="mybtn" @click="editCourse(course.slug , course._id)">ویرایش دوره</button>
+                <button id="remove" class="mybtn" @click="remove(course._id)">حذف دوره</button>
               </div>
             </div>
           </div>
           <p v-if="!courses" class="msg">دوره ای برای نمایش وجود ندارد</p>
           <p v-if="err" class="msg">خطا در برقراری ارتباط با سرور</p>
           <p v-if="loading" class="msg">
+            <span class="spinner-border spinner-border-md"></span>
+          </p>
           <paginate
-          v-if="!loading && courses"
+            v-show="!loading && courses && !err"
             :page-count="totalPages"
             :click-handler="page"
             :prev-text="'قبلی'"
@@ -75,8 +77,6 @@
             </span>
             >
           </paginate>
-            <span class="spinner-border spinner-border-md"></span>
-          </p>
         </div>
       </div>
     </div>
@@ -92,6 +92,25 @@ import axios from "axios";
 import paginate from "vuejs-paginate";
 export default {
   components: { adminMenu, adminTopMenu, paginate },
+  async beforeRouteEnter(to, from, next) {
+    const token = localStorage.getItem("auth");
+    if (!token) next("/login");
+    else {
+      try {
+        const res = await axios({
+          method: "post",
+          url: "http://localhost:4000/admin",
+          data: {
+            token
+          }
+        });
+        if (res.status == 200) next();
+      } catch (err) {
+        if (err.response.status === 401) next("/login");
+        else next("/");
+      }
+    }
+  },
   data() {
     return {
       courses: [],
@@ -102,6 +121,7 @@ export default {
     };
   },
   methods: {
+    //callback function for pagination
     async page(page) {
       let token = localStorage.getItem("auth");
       this.loading = true;
@@ -115,6 +135,31 @@ export default {
       });
       this.courses = res.data.courses.docs;
       this.loading = false;
+    },
+
+    //remove course function
+    async remove(id) {
+      let token = localStorage.getItem("auth");
+      try {
+        const res = await axios({
+          method: "delete",
+          url: `http://localhost:4000/admin/courses/remove`,
+          data: {
+            token,
+            id
+          }
+        });
+        this.page(this.Page);
+        alert("done");
+      } catch (err) {
+        alert(err);
+        console.log(err.response.data);
+      }
+    },
+
+    //edit course function
+    editCourse(slug , id) {
+      this.$router.push(`/admin/edit-course/${id}/${slug}`);
     }
   },
   async created() {

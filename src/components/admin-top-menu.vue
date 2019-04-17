@@ -20,7 +20,7 @@ export default {};
 
 <style scoped>
 #nav {
-  width: 100vw;
+  width: 100%;
   padding: 0 20px;
   background-color: #fdfdfd;
   -webkit-box-shadow: 0px 1px 5px 1px rgba(0, 0, 0, 0.03);

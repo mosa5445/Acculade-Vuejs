@@ -37,6 +37,11 @@ export default new Router({
       component: () => import('./views/auth/forget-password-procces.vue')
     },
     {
+      path: '/admin',
+      name: 'dashboard',
+      component: () => import('./views/admin/dashboard.vue')
+    },
+    {
       path: '/admin/courses',
       name: 'courses',
       component: () => import('./views/admin/courses.vue')
@@ -45,6 +50,11 @@ export default new Router({
       path: '/admin/new-course',
       name: 'new-course',
       component: () => import('./views/admin/new-course.vue')
+    },
+    {
+      path: '/admin/edit-course/:id/:slug',
+      name: 'edit-course',
+      component: () => import('./views/admin/edit-course.vue')
     },
     {
        path: "*", 

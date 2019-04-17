@@ -12,7 +12,7 @@
       <ul class="my- px-0">
         <!-- item 1 -->
         <li class="item">
-          <router-link to="#">
+          <router-link to="/admin">
             <div class="d-flex justify-content-between px-4">
               <div>
                 <i class="fas fa-home"></i>
@@ -38,7 +38,7 @@
 
         <!-- item 3 -->
         <li class="item">
-          <router-link to="/">
+          <router-link to="#">
             <div class="d-flex justify-content-between px-4">
               <div>
                 <i class="fas fa-book-open"></i>
@@ -64,7 +64,7 @@
   min-width: 250px;
   font-size: 0.9rem;
   overflow: hidden;
-  height: 92vh;
+  height: 100%;
   -webkit-box-shadow: -1px 0px 5px 1px rgba(0, 0, 0, 0.03);
   -moz-box-shadow: -1px 0px 5px 1px rgba(0, 0, 0, 0.03);
   box-shadow: -1px 0px 5px 1px rgba(0, 0, 0, 0.03);
