@@ -92,7 +92,7 @@
         <router-link to="/singup" tag="a">ثبت نام</router-link>
       </div>
       <div v-if="auth">
-        <router-link to="/profile" tag="a" id="login">حساب کاربری</router-link>
+        <router-link to="/admin" tag="a" id="login">حساب کاربری</router-link>
 
         <button @click="logout">خروج</button>
       </div>
@@ -197,9 +197,12 @@ export default {
           let res = await axios({
             method: "post",
             url: "http://localhost:4000/logout",
-            data: {
-              token
+            headers:{
+              'token': token
             }
+            // data: {
+            //   token
+            // }
           });
         } catch (err) {}
         this.auth = false;

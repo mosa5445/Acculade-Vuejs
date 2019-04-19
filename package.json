@@ -14,9 +14,11 @@
     "bootstrap-v4-rtl": "^4.3.1-0",
     "bootstrap-vue": "^2.0.0-rc.16",
     "core-js": "^2.6.5",
+    "v-bar": "^3.0.0",
     "validator": "^10.11.0",
     "vue": "^2.6.10",
     "vue-router": "^3.0.1",
+    "vue-scrolly": "^0.9.3",
     "vuejs-paginate": "^2.1.0"
   },
   "devDependencies": {

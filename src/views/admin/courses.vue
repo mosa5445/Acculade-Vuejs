@@ -1,7 +1,7 @@
 <template>
   <div id="courses">
     <adminTopMenu></adminTopMenu>
-    <div class="d-flex">
+    <div class="d-flex page">
       <adminMenu></adminMenu>
       <div class="container-fluid">
         <div class="com-lg-8 col-md-10 col-sm-12" id="list">
@@ -41,18 +41,25 @@
               </div>
 
               <div class="d-flex justify-content-around btnbox flex-fill flex-wrap">
-                <button id="edit" class="mybtn" @click="editCourse(course.slug , course._id)">ویرایش دوره</button>
+                <button
+                  id="edit"
+                  class="mybtn"
+                  @click="editCourse(course.slug , course._id)"
+                >ویرایش دوره</button>
                 <button id="remove" class="mybtn" @click="remove(course._id)">حذف دوره</button>
               </div>
             </div>
           </div>
-          <p v-if="!courses" class="msg">دوره ای برای نمایش وجود ندارد</p>
+          <p
+            v-if="courses.length == 0 && !loading && !err"
+            class="msg"
+          >دوره ای برای نمایش وجود ندارد</p>
           <p v-if="err" class="msg">خطا در برقراری ارتباط با سرور</p>
           <p v-if="loading" class="msg">
             <span class="spinner-border spinner-border-md"></span>
           </p>
           <paginate
-            v-show="!loading && courses && !err"
+            v-show="!loading && courses && !err && totalPages > 1"
             :page-count="totalPages"
             :click-handler="page"
             :prev-text="'قبلی'"
@@ -77,6 +84,12 @@
             </span>
             >
           </paginate>
+          <div class="err-box" v-if="serverErr">
+            <span>{{msg}}</span>
+          </div>
+          <div class="success-box" v-if="serverSuccess">
+            <span>{{msg}}</span>
+          </div>
         </div>
       </div>
     </div>
@@ -90,6 +103,7 @@ import adminTopMenu from "@/components/admin-top-menu.vue";
 import { async } from "q";
 import axios from "axios";
 import paginate from "vuejs-paginate";
+import { setTimeout } from "timers";
 export default {
   components: { adminMenu, adminTopMenu, paginate },
   async beforeRouteEnter(to, from, next) {
@@ -100,9 +114,12 @@ export default {
         const res = await axios({
           method: "post",
           url: "http://localhost:4000/admin",
-          data: {
-            token
+          headers: {
+            token: token
           }
+          // data: {
+          //   token
+          // }
         });
         if (res.status == 200) next();
       } catch (err) {
@@ -117,7 +134,10 @@ export default {
       Page: 1,
       totalPages: 1,
       loading: false,
-      err: false
+      err: false,
+      serverSuccess: false,
+      serverErr: false,
+      msg: ""
     };
   },
   methods: {
@@ -126,10 +146,13 @@ export default {
       let token = localStorage.getItem("auth");
       this.loading = true;
       let res = await axios({
-        method: "post",
+        method: "get",
         url: "http://localhost:4000/admin/courses-info",
+        headers: {
+          token: token
+        },
         data: {
-          token,
+          // token,
           page
         }
       });
@@ -139,26 +162,36 @@ export default {
 
     //remove course function
     async remove(id) {
+      this.loading = true;
       let token = localStorage.getItem("auth");
       try {
         const res = await axios({
           method: "delete",
           url: `http://localhost:4000/admin/courses/remove`,
+          headers: {
+            token: token
+          },
           data: {
-            token,
+            // token,
             id
           }
         });
         this.page(this.Page);
-        alert("done");
+        this.msg = "";
+        this.msg = "دوره با موفقیت پاک شد";
+        this.serverSuccess = true;
+        setTimeout(() => (this.serverSuccess = false), 3000);
       } catch (err) {
-        alert(err);
-        console.log(err.response.data);
+        this.msg = "";
+        this.msg = err.response.data.msg;
+        this.serverErr = true;
+        setTimeout(() => (this.serverErr = false), 3000);
       }
+      this.loading = false;
     },
 
     //edit course function
-    editCourse(slug , id) {
+    editCourse(slug, id) {
       this.$router.push(`/admin/edit-course/${id}/${slug}`);
     }
   },
@@ -167,11 +200,14 @@ export default {
     try {
       let token = localStorage.getItem("auth");
       const res = await axios({
-        method: "post",
+        method: "get",
         url: "http://localhost:4000/admin/courses-info",
-        data: {
-          token
+        headers: {
+          token: token
         }
+        // data: {
+        //   token
+        // }
       });
       this.courses = res.data.courses.docs;
       this.totalPages = res.data.courses.totalPages;
@@ -185,13 +221,18 @@ export default {
 </script>
 
 <style>
+a {
+  text-decoration: none !important;
+}
 .pagination {
   margin: 20px auto;
   justify-content: center;
 }
 .page-item {
   background-color: #fdfdfd;
-  padding: 10px 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   -webkit-box-shadow: 1px 1px 1px 1px rgba(0, 0, 0, 0.03);
   -moz-box-shadow: 1px 1px 1px 1px rgba(0, 0, 0, 0.03);
   box-shadow: 1px 1px 1px 1px rgba(0, 0, 0, 0.03);
@@ -201,6 +242,7 @@ export default {
   color: #000;
   outline: none;
   text-decoration: none;
+  padding: 10px 20px;
 }
 
 .page-item.active {
@@ -214,7 +256,8 @@ export default {
 
 .prev-class {
   background-color: #fdfdfd;
-  padding: 10px 30px;
+  display: flex;
+  justify-content: center;
   -webkit-border-top-right-radius: 5px;
   -webkit-border-bottom-right-radius: 5px;
   -moz-border-radius-topright: 5px;
@@ -228,11 +271,13 @@ export default {
 
 .prev-link-class {
   color: #000;
+  padding: 10px 30px;
 }
 
 .next-class {
   background-color: #fdfdfd;
-  padding: 10px 30px;
+  display: flex;
+  justify-content: center;
   -webkit-border-top-left-radius: 5px;
   -webkit-border-bottom-left-radius: 5px;
   -moz-border-radius-topleft: 5px;
@@ -245,6 +290,7 @@ export default {
 }
 .next-link-class {
   color: #000;
+  padding: 10px 30px;
 }
 .disabled-class {
   filter: blur(1px);
@@ -252,6 +298,30 @@ export default {
 </style>
 
 <style scope>
+.page {
+  height: 93vh;
+}
+.err-box {
+  text-align: center;
+  background-color: #d32f2f;
+  border-radius: 5px;
+  color: #fff;
+  padding: 10px;
+  margin: 0 30px;
+  font-size: 0.9rem;
+}
+.success-box {
+  text-align: center;
+  background-color: #4caf50;
+  border-radius: 5px;
+  color: #fff;
+  padding: 10px;
+  margin: 10px 30px;
+  font-size: 0.9rem;
+}
+.footer {
+  margin-bottom: 0px;
+}
 .msg {
   color: grey;
   margin-top: 25vh;

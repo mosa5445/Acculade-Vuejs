@@ -1,7 +1,5 @@
 <template>
   <div id="app">
-    
-    
     <router-view/>
   </div>
 </template>
@@ -11,10 +9,8 @@
 
 body {
   background-color: #f5f5f5 !important;
-  
 }
 #app {
   font-family: "iranSans", "Yekan" !important;
 }
-
 </style>

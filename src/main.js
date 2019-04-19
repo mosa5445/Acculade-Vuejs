@@ -9,6 +9,7 @@ import '../public/css/bootstrap-rtl.min.css'
 
 Vue.config.productionTip = false
 
+
 Vue.use(BootstrapVue)
 new Vue({
   router,

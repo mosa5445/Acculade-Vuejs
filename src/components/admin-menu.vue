@@ -54,9 +54,6 @@
 </template>
 
 <style scoped>
-#admin-menu {
-  bottom: 0px;
-}
 #nav {
   right: 0px;
   background-color: #fdfdfd;

@@ -1,11 +1,11 @@
 ﻿<template>
   <div id="courses">
     <adminTopMenu></adminTopMenu>
-    <div class="d-flex">
+    <div class="d-flex page">
       <adminMenu></adminMenu>
       <div class="container-fluid">
         <div class="col-lg-8 col-md-10 col-sm-12" id="list">
-          <form @submit.prevent="submit" :class="{blur : serverSuccess}">
+          <form v-if="!nextPage" @submit.prevent="next">
             <h3 class="my-4">انتشار دوره در آکولاد</h3>
 
             <div class="input-group my-3">
@@ -32,6 +32,7 @@
             >
             <p v-if="err.title" class="my-3" style="color:red;font-size:0.8rem;">{{err.title}}</p>
             <textarea
+              style="text-align:right !important;"
               name
               id
               cols="30"
@@ -74,13 +75,81 @@
               >
             </div>
             <p v-if="err.price" class="my-3" style="color:red;font-size:0.8rem;">{{err.price}}</p>
-            <button class="newcourse">انتشار دوره تازه</button>
+            <button class="newcourse my-5">مرحله بعد</button>
           </form>
-          <div class="err-box" v-if="serverErr">
-            <span>{{msg}}</span>
-          </div>
-          <div class="success-box" v-if="serverSuccess">
-            <span>{{msg}}</span>
+          <div v-if="nextPage">
+            <button class="newcourse" @click="nextPage = false">مرحله قبلی</button>
+            <button class="newcourse mx-2" @click="newEpisode">افزودن قسمت جدید</button>
+            <div>
+              <div v-for="(episode , index) in episodes" :key="index" class="episode">
+                <form class="d-flex flex-wrap my-3" @submit.prevent>
+                  <input
+                    type="text"
+                    class="form-control col-lg-12 my-2"
+                    placeholder="عنوان قسمت"
+                    v-model="episode.title"
+                  >
+                  <input
+                    type="text"
+                    class="form-control col-lg-6"
+                    placeholder="ادرس ویدئو دوره"
+                    v-model="episode.url"
+                  >
+                  <div class="form-control col-lg-6">
+                    <input
+                      type="number"
+                      max="59"
+                      min="0"
+                      name="sec"
+                      class="time col-3"
+                      placeholder="ثانیه"
+                      v-model="episode.sec"
+                    >
+                    <span>:</span>
+                    <input
+                      type="number"
+                      max="59"
+                      min="0"
+                      name="min"
+                      class="time col-4"
+                      placeholder="دقیقه"
+                      v-model="episode.min"
+                    >
+                    <span>:</span>
+                    <input
+                      type="number"
+                      max="1"
+                      min="0"
+                      name="hour"
+                      class="time col-4"
+                      placeholder="ساعت"
+                      v-model="episode.hour"
+                    >
+                  </div>
+                  <div class="custom-control custom-switch mx-auto mt-3">
+                    <input
+                      type="checkbox"
+                      class="custom-control-input"
+                      :id="index"
+                      v-model="episode.preview"
+                    >
+                    <label class="custom-control-label" :for="index">پیش نمایش؟</label>
+                  </div>
+                  <br>
+                </form>
+                <button
+                  class="btn btn-outline-danger btn-block mt-3"
+                  @click="removeEpisode(index)"
+                >حذف</button>
+              </div>
+              <div class="err-box" v-if="serverErr">
+                <span>{{msg}}</span>
+              </div>
+              <div class="success-box" v-if="serverSuccess">
+                <span>{{msg}}</span>
+              </div>
+              <button class="newcourse" @click="submit" type="submit">انتشار دوره</button>
+            </div>
           </div>
         </div>
       </div>
@@ -97,6 +166,18 @@ export default {
   components: { adminMenu, adminTopMenu },
   data() {
     return {
+      nextPage: false,
+      episodes: [
+        {
+          title: "",
+          url: "",
+          time: "",
+          sec: "",
+          min: "",
+          hour: "",
+          preview: false
+        }
+      ],
       slug: "",
       title: "",
       content: "",
@@ -146,8 +227,22 @@ export default {
         this.err.price = "قیمت دوره نباید خالی بماند";
       else this.err.price = "";
     },
-    async submit() {
-      const token = localStorage.getItem("auth");
+    newEpisode() {
+      this.episodes.push({
+        title: "",
+        url: "",
+        time: "",
+        sec: "",
+        min: "",
+        hour: "",
+        preview: false
+      });
+    },
+
+    removeEpisode(index) {
+      this.episodes.splice(index, 1);
+    },
+    async next() {
       await this.checkfile();
       await this.hasWhiteSpace();
       await this.contentcheck();
@@ -160,6 +255,41 @@ export default {
         this.err.content == "" &&
         this.err.file == ""
       ) {
+        this.nextPage = true;
+      }
+    },
+    async submit() {
+      const token = localStorage.getItem("auth");
+
+      //concat hour min sec in time
+      this.episodes.forEach(episode => {
+        episode.time = "";
+        if (episode.min.length == 1) episode.min = "0" + episode.min;
+
+        if (episode.sec.length == 1) episode.sec = "0" + episode.sec;
+
+        if (episode.hour == "") episode.time = episode.min + ":" + episode.sec;
+        else
+          episode.time = episode.hour + ":" + episode.min + ":" + episode.sec;
+      });
+      let err = false;
+      for (let i = 0; i < this.episodes.length && !err; i++) {
+        if (
+          !this.episodes[i].title ||
+          !this.episodes[i].url ||
+          !this.episodes[i].time
+        )
+          err = true;
+      }
+      if (err) {
+        this.msg = "";
+        this.serverErr = true;
+        this.msg = "لطفا تمام موارد خواسته شده را وارد کنید";
+      } else {
+        this.serverErr = false;
+        this.msg = "";
+        let jsonEpisodes = await JSON.stringify(this.episodes);
+
         let formData = new FormData();
         formData.append("image", this.image);
         formData.append("title", this.title);
@@ -168,27 +298,32 @@ export default {
         formData.append("content", this.content);
         formData.append("tag", this.tag);
         formData.append("slug", this.slug);
+        formData.append("episodes", jsonEpisodes);
         formData.append("token", token);
         try {
           let res = await axios({
             method: "post",
             url: "http://localhost:4000/admin/submit-new-course",
+            headers: {
+              token: token
+            },
             data: formData
           });
-           this.serverErr = false;
-           this.msg = '';
-           this.serverSuccess = true;
-           this.msg = res.data.msg;
+          this.serverErr = false;
+          this.msg = "";
+          this.serverSuccess = true;
+          this.msg = res.data.msg;
         } catch (err) {
           this.serverSuccess = false;
-          this.msg = '';
+          this.msg = "";
           this.serverErr = true;
-          if (err.response.data.err) this.msg =err.response.data.err;
-          else if (err.response.status == 401) this.msg = 'لطفا دوباره وارد سایت شوید';
-          else this.msg = 'به نظر میاد که یه مشکلی هست ، لطفا دوباره امتحان کن';
+          if (err.response.data.err) this.msg = err.response.data.err;
+          else if (err.response.status == 401)
+            this.msg = "لطفا دوباره وارد سایت شوید";
+          else this.msg = "به نظر میاد که یه مشکلی هست ، لطفا دوباره امتحان کن";
           console.log("err", err, " ", err.response.data);
         }
-      } 
+      }
     }
   }
 };
@@ -196,18 +331,36 @@ export default {
 
 
 <style scoped>
+.form-control {
+  text-align: center;
+}
+.episode {
+  border: 1px solid #eeeeee;
+  border-radius: 5px;
+  padding: 10px 20px;
+  margin: 20px 0;
+  background-color: #fdfdfd;
+  -webkit-box-shadow: 1px 1px 2px 2px rgba(0, 0, 0, 0.02);
+  -moz-box-shadow: 1px 1px 2px 2px rgba(0, 0, 0, 0.02);
+  box-shadow: 1px 1px 2px 2px rgba(0, 0, 0, 0.02);
+}
+.time {
+  border: none;
+  text-align: center;
+  outline: none;
+}
 ::placeholder {
   /* Chrome, Firefox, Opera, Safari 10.1+ */
-  text-align: right !important;
+  text-align: center !important;
 }
 :-ms-input-placeholder {
   /* Internet Explorer 10-11 */
-  text-align: right !important;
+  text-align: center !important;
 }
 
 ::-ms-input-placeholder {
   /* Microsoft Edge */
-  text-align: right !important;
+  text-align: center !important;
 }
 #list {
   margin: auto;
@@ -218,7 +371,7 @@ export default {
   border-radius: 50px;
   background-color: #7cb342;
   margin: 5vh 0;
-  color: #fff;
+  color: #fff !important;
   -webkit-box-shadow: 1px 1px 1px 1px rgba(0, 0, 0, 0.1);
   -moz-box-shadow: 1px 1px 1px 1px rgba(0, 0, 0, 0.1);
   box-shadow: 1px 1px 1px 1px rgba(0, 0, 0, 0.1);
@@ -227,6 +380,13 @@ export default {
 }
 .newcourse:hover {
   background-color: #82c53b;
+}
+.blur {
+  -webkit-filter: blur(5px);
+  -moz-filter: blur(5px);
+  -o-filter: blur(5px);
+  -ms-filter: blur(5px);
+  filter: blur(5px);
 }
 .err-box {
   text-align: center;
@@ -245,13 +405,10 @@ export default {
   padding: 10px;
   margin: 10px 30px;
   font-size: 0.9rem;
-  
 }
-.blur {
-  -webkit-filter: blur(5px);
-  -moz-filter: blur(5px);
-  -o-filter: blur(5px);
-  -ms-filter: blur(5px);
-  filter: blur(5px);
+.page {
+  height: 93vh;
 }
 </style>
+
+

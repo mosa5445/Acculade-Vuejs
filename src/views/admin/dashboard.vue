@@ -1,7 +1,7 @@
 <template>
   <div id="courses">
     <adminTopMenu></adminTopMenu>
-    <div class="d-flex">
+    <div class="d-flex page">
       <adminMenu></adminMenu>
       <div class="container-fluid">
         <div class="com-lg-8 col-md-10 col-sm-12">
@@ -29,9 +29,12 @@ export default {
         const res = await axios({
           method: "post",
           url: "http://localhost:4000/admin",
-          data: {
-            token
+          headers: {
+            token: token
           }
+          // data: {
+          //   token
+          // }
         });
         if (res.status == 200) next();
       } catch (err) {
@@ -44,6 +47,9 @@ export default {
 </script>
 
 <style scope>
+.page {
+  height: 93vh;
+}
 .msg {
   color: grey;
   margin-top: 25vh;
