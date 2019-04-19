@@ -7,7 +7,11 @@
           <div class="login-form">
             <div class="form-head">
               <div class="d-flex justify-content-center">
-                <img alt="acculade logo" src="../../../public/register_Logo.png" style="display:block">
+                <img
+                  alt="acculade logo"
+                  src="../../../public/register_Logo.png"
+                  style="display:block"
+                >
               </div>
               <h6>ایجاد حساب کاربری</h6>
               <span class="register">
@@ -212,21 +216,24 @@
 
 <script>
 import axios from "axios";
-import validator from "validator";
+
 import { async } from "q";
 import { type } from "os";
-import { setTimeout } from 'timers';
-import siteMenu from '@/components/menu.vue'
+import { setTimeout } from "timers";
+import { validation } from "@/Mixing/register/validation.js";
+
+import siteMenu from "@/components/menu.vue";
 export default {
-   components: {
+  components: {
     siteMenu
   },
+  mixins:[validation],
   beforeRouteEnter(to, from, next) {
     const token = localStorage.getItem("auth");
     if (token) next("/");
     else next();
   },
- 
+
   data() {
     return {
       user: {
@@ -289,38 +296,6 @@ export default {
         }
       }
       this.loading = false;
-    },
-    name() {
-      if (validator.isEmpty(this.user.name))
-        this.err.name = "فیلد نام باید وارد شود";
-      else if (this.user.name.length < 3)
-        this.err.name = "نام باید بیشتر از دو حرف باشد";
-      else this.err.name = "";
-    },
-    email() {
-      if (validator.isEmpty(this.user.email))
-        this.err.email = "فیلد ایمیل باید وارد شود";
-      else if (!validator.isEmail(this.user.email))
-        this.err.email = "ایمیل نامعتبر";
-      else this.err.email = "";
-    },
-    username() {
-      if (validator.isEmpty(this.user.username))
-        this.err.username = "فیلد نام کاربری باید وارد شود";
-      else this.err.username = "";
-    },
-    password() {
-      if (!validator.isLength(this.user.password, { min: 8 }))
-        this.err.password = "رمز ورود باید حداقل 8 حرف باشد";
-      else {
-        this.err.password = "";
-        
-        }
-    },
-    confirmpassword() {
-      if (this.user.confirmpassword !== this.user.password)
-        this.err.confirmpassword = "این مقدار با مقدار رمز ورود یکسان نیست";
-      else this.err.confirmpassword = "";
     }
   }
 };

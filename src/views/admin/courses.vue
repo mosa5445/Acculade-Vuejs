@@ -195,6 +195,7 @@ export default {
       this.$router.push(`/admin/edit-course/${id}/${slug}`);
     }
   },
+  
   async created() {
     this.loading = true;
     try {

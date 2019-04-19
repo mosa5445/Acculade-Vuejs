@@ -39,7 +39,7 @@ export default new Router({
     {
       path: '/admin',
       name: 'dashboard',
-      component: () => import('./views/admin/dashboard.vue')
+      component: () => import('./views/admin/admin.vue')
     },
     {
       path: '/admin/courses',
