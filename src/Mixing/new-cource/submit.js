@@ -85,6 +85,7 @@ export const submit = {
                 formData.append("tag", this.tag);
                 formData.append("slug", this.slug);
                 formData.append("time", this.time);
+                formData.append("preview", this.preview);
                 formData.append("episodes", jsonEpisodes);
                 formData.append("token", token);
                 try {

@@ -57,6 +57,11 @@ export default new Router({
       component: () => import('./views/admin/edit-course.vue')
     },
     {
+      path: '/courses/:slug',
+      name: 'singlePage',
+      component: () => import('./views/singlePage.vue')
+    },
+    {
        path: "*", 
        name: '404',
        component: () => import('./views/404.vue')

@@ -7,7 +7,8 @@ export const episode = {
               time: "",
               sec: "",
               min: "",
-              hour: ""
+              hour: "",
+              preview: false
             });
           },
           removeEpisode(index) {

@@ -162,9 +162,16 @@ export default {
 
     //remove course function
     async remove(id) {
-      this.loading = true;
-      let token = localStorage.getItem("auth");
       try {
+      this.$confirm('بعد از حذف دوره  اطلاعات قابل بازیابی نخواهند بود', 'برای حذف دوره اطمنیان داری؟', {
+          confirmButtonText: 'مطمعنم',
+          cancelButtonText: 'بیخیال',
+          type: 'warning',
+          center: true
+        }).then(async () => {
+          this.loading = true;
+      let token = localStorage.getItem("auth");
+      
         const res = await axios({
           method: "delete",
           url: `http://localhost:4000/admin/courses/remove`,
@@ -172,20 +179,27 @@ export default {
             token: token
           },
           data: {
-            // token,
             id
           }
-        });
-        this.page(this.Page);
-        this.msg = "";
-        this.msg = "دوره با موفقیت پاک شد";
+        });       
         this.serverSuccess = true;
+          this.$message({
+            type: 'success',
+            message: 'دوره با موفقیت پاک شد'
+          });
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: 'حذف دوره لغو شد'
+          });
+        });
+      
         setTimeout(() => (this.serverSuccess = false), 3000);
       } catch (err) {
-        this.msg = "";
-        this.msg = err.response.data.msg;
-        this.serverErr = true;
-        setTimeout(() => (this.serverErr = false), 3000);
+         this.$message({
+            type: 'danger',
+            message: 'حذف دوره با خطا مواجه شد'
+          });
       }
       this.loading = false;
     },
@@ -202,13 +216,8 @@ export default {
       let token = localStorage.getItem("auth");
       const res = await axios({
         method: "get",
-        url: "http://localhost:4000/admin/courses-info",
-        headers: {
-          token: token
-        }
-        // data: {
-        //   token
-        // }
+        url: "http://localhost:4000/courses-info",
+       
       });
       this.courses = res.data.courses.docs;
       this.totalPages = res.data.courses.totalPages;

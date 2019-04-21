@@ -3,14 +3,19 @@ import App from './App.vue'
 import router from './router'
 import BootstrapVue from 'bootstrap-vue'
 
+
+
 import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
 import '../public/css/bootstrap-rtl.min.css'
+import './plugins/element.js'
 
 Vue.config.productionTip = false
 
 
 Vue.use(BootstrapVue)
+
+
 new Vue({
   router,
   render: h => h(App)

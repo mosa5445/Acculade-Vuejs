@@ -92,6 +92,7 @@ export const submit = {
                     formData.append("price", this.price);
                     formData.append("content", this.content);
                     formData.append("tag", this.tag);
+                    formData.append("preview", this.preview);
                     formData.append("slug", this.slug);
                     formData.append("time", this.time);
                     formData.append("token", token);
@@ -155,6 +156,7 @@ export const submit = {
                                 slug: this.slug,
                                 episodes: this.episodes,
                                 time: this.time,
+                                preview: this.preview,
                                 token
                             }
                         });
