@@ -3,9 +3,9 @@
     <siteMenu></siteMenu>
     <div class="container my-5">
       <main>
-        <div class="flex flex-wrap">
+        <div class="d-flex flex-wrap">
           <div class="col-lg-8 col-md-10 col-sm-12">
-            <div class="content">
+            <div class="content" v-if="!loading">
               <header>
                 <div
                   id="title"
@@ -29,7 +29,11 @@
                   >امتیاز دوره : 4.5/5</span>
                 </div>
                 <div class="imgPlace">
-                  <img :src="`http://localhost:4000/${course.images[720]}`" alt class="post-image">
+                  <img
+                    :src="`http://localhost:4000/${course.images[720]}`"
+                    :alt="course.title"
+                    class="post-image"
+                  >
                 </div>
                 <div class="p-3 my-3" id="info">
                   <div
@@ -43,7 +47,7 @@
 
                     <div class="d-flex flex-column" style="text-align:center;">
                       <span>اخرین بروز رسانی</span>
-                      <span>2 اردیبهشت 98</span>
+                      <span>3 اردیبهشت 1398</span>
                     </div>
 
                     <div class="d-flex flex-column" style="text-align:center;">
@@ -55,15 +59,85 @@
               </header>
               <div class="my-2">
                 <div class="d-flex align-items-stretch my-2" id="selectors">
-                  <button class="btn btn-success" style="width: 50%;">توضیحات</button>
-                  <button class="btn" style="width: 50%;">نمایش قسمت ها</button>
+                  <button
+                    class="btn"
+                    :class="{'btn-success' : !episode}"
+                    style="width: 50%;"
+                    @click="episode = false"
+                  >توضیحات</button>
+                  <button
+                    class="btn"
+                    :class="{'btn-success' : episode}"
+                    style="width: 50%;"
+                    @click="episode = true"
+                  >نمایش قسمت ها</button>
                 </div>
-                <article id="description" class="my-2">{{course.content}}</article>
+                <article class="description my-2" v-if="!episode">{{course.content}}</article>
+
+                <!-- Episodes -->
+                <section class="description episodes" v-if="episode">
+                  <div v-for="(episode , index) in course.episodes" :key="episode._id">
+                    <div class="episode d-flex align-items-center justify-content-between">
+                      <div class="d-flex align-items-center">
+                        <div class="No mx-2 my-1">{{index}}</div>
+                        <span>{{episode.title}}</span>
+                      </div>
+                      <div>
+                        <span v-if="episode.preview" class="mx-5">پیش نمایش</span>
+                        <span>
+                          {{episode.time}}
+                          <i class="far fa-clock mx-2"></i>
+                        </span>
+                      </div>
+                    </div>
+                    <hr>
+                  </div>
+                </section>
               </div>
             </div>
           </div>
           <div class="col-lg-4 col-md-2 col-sm-12">
-            <aside></aside>
+            <aside>
+              <div class="side-object">
+                <div
+                  
+                  class="d-flex justify-content-around my-2 side-bar-option"
+                >
+                  <span>وضعیت دوره</span>
+                  <span>تکمیل شده</span>
+                </div>
+
+                <div
+                  
+                  class="d-flex justify-content-around my-2 side-bar-option"
+                >
+                  <span>نوع دوره</span>
+                  <span>VIP</span>
+                </div>
+
+                <div class="mt-2 side-bar-option" style="text-align:center;">
+                  <span>این دوره فقط برای کاربران دارای عضویت ویژه قابل دسترسی می باشد ، لطفا اکانت خود را ارتقا دهید</span>
+                </div>
+                <button class="btn btn-success btn-block mt-2">ارتقا به حساب ویژه</button>
+              </div>
+              
+              <div class="side-object my-3 d-flex flex-column align-items-center">
+                <div class="my-1 side-bar-option">
+                  <i class="fas fa-wallet mx-3"></i>
+                  <span>امکان بازگشت وجه</span>
+                </div>
+                <div class="my-1 side-bar-option">
+                  <i class="fas fa-envelope mx-3"></i>
+                  <span>ارتباط مستقیم با مدرس</span>
+                </div>
+                <div class="my-1 side-bar-option">
+                   <i class="fas fa-key mx-3"></i>
+                  <span>دسترسی راحت</span>
+                </div>
+                
+
+              </div>
+            </aside>
           </div>
         </div>
       </main>
@@ -72,11 +146,41 @@
 </template>
 
 <style scoped>
+.side-bar-option{
+  padding: 10px;
+  border-radius: 5px;
+  width: 100%;
+  display: flex;
+  background-color: #EEEEEE;
+  color:grey; 
+  font-size:0.8rem;
+}
+.side-object {
+  background-color: #fff;
+  padding: 10px;
+  border-radius: 5px;
+  -webkit-box-shadow: 1px 1px 3px 1px rgba(0, 0, 0, 0.03);
+  -moz-box-shadow: 1px 1px 3px 1px rgba(0, 0, 0, 0.03);
+  box-shadow: 1px 1px 3px 1px rgba(0, 0, 0, 0.03);
+}
+.No {
+  width: 43px;
+  height: 43px;
+  border-radius: 50%;
+  border: solid 1px #28a745;
+  color: #000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: "iranSans";
+}
+.episode {
+  font-family: "Yekan", "iranSans";
+}
 a {
   text-decoration: none;
   color: #000;
   transition: all 0.2s;
-  
 }
 a:hover {
   color: #346667;
@@ -123,9 +227,11 @@ a:hover {
   -webkit-box-shadow: 1px 1px 3px 1px rgba(0, 0, 0, 0.03);
   -moz-box-shadow: 1px 1px 3px 1px rgba(0, 0, 0, 0.03);
   box-shadow: 1px 1px 3px 1px rgba(0, 0, 0, 0.03);
-  
 }
-#description {
+.episodes {
+  padding: 20px;
+}
+.description {
   padding: 20px;
   background-color: #fdfdfd;
   border-radius: 5px;
@@ -135,14 +241,12 @@ a:hover {
   -moz-box-shadow: 1px 1px 3px 1px rgba(0, 0, 0, 0.03);
   box-shadow: 1px 1px 3px 1px rgba(0, 0, 0, 0.03);
   line-height: 2rem;
-  
+
   color: #212121;
-  font-family: "Yekan"
+  font-family: "Yekan";
 }
 #description > p {
-  
   font-size: 0.95rem;
-  
 }
 </style>
 
@@ -159,7 +263,8 @@ export default {
     return {
       course: {},
       err: false,
-      loading: false
+      loading: true,
+      episode: false
     };
   },
   async created() {
