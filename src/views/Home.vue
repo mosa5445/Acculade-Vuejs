@@ -200,7 +200,7 @@ export default {
     try {
       const res = await axios({
         method: "get",
-        url: "http://localhost:4000/courses-info"
+        url: "http://localhost:4000/course"
       });
       this.courses = res.data.courses.docs;
       this.totalPages = res.data.courses.totalPages;

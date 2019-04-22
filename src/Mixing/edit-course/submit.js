@@ -99,7 +99,7 @@ export const submit = {
                     try {
                         let res = await axios({
                             method: "put",
-                            url: "http://localhost:4000/admin/edit-course",
+                            url: "http://localhost:4000/admin/course",
                             headers: {
                                 token: token
                             },
@@ -142,7 +142,7 @@ export const submit = {
                     try {
                         let res = await axios({
                             method: "put",
-                            url: "http://localhost:4000/admin/edit-course",
+                            url: "http://localhost:4000/admin/course",
                             headers: {
                                 token: token
                             },

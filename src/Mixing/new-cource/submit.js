@@ -91,7 +91,7 @@ export const submit = {
                 try {
                     let res = await axios({
                         method: "post",
-                        url: "http://localhost:4000/admin/submit-new-course",
+                        url: "http://localhost:4000/admin/course",
                         headers: {
                             token: token
                         },

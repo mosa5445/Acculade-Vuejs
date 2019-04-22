@@ -4,7 +4,7 @@
     <div class="container my-5">
       <main>
         <div class="d-flex flex-wrap">
-          <div class="col-lg-8 col-md-10 col-sm-12">
+          <div class="col-lg-8  col-sm-12">
             <div class="content" v-if="!loading">
               <header>
                 <div
@@ -13,14 +13,14 @@
                   style="font-family: 'Yekan' , 'iranSans';"
                 >
                   <div class="d-flex flex-column">
-                    <h3>دوره آموزشی کوفت</h3>
-                    <div style="color:grey; font-size: 0.8rem;" class="d-flex align-items-center">
+                    <h3>{{course.title}}</h3>
+                    <div style="color:grey; font-size: 0.8rem;" class="d-flex align-items-center flex-wrap">
                       <span class="ml-2">شما اینجا هستید:</span>
                       <router-link to="/" class="ml-2">اکولاد</router-link>
                       <i class="fas fa-angle-left ml-2"></i>
                       <router-link to="/courses" class="ml-2">دوره ها</router-link>
                       <i class="fas fa-angle-left ml-2"></i>
-                      <span>دوره آموزشی کوفت</span>
+                      <span>{{course.title}}</span>
                     </div>
                   </div>
                   <span
@@ -35,7 +35,7 @@
                     class="post-image"
                   >
                 </div>
-                <div class="p-3 my-3" id="info">
+                <div class="p-3 my-3 d-felx flex-wrap" id="info">
                   <div
                     class="d-flex justify-content-around align-items-center"
                     style="color:grey;font-size:0.8rem;"
@@ -96,7 +96,7 @@
               </div>
             </div>
           </div>
-          <div class="col-lg-4 col-md-2 col-sm-12">
+          <div class="col-lg-4  col-sm-12">
             <aside>
               <div class="side-object">
                 <div
@@ -146,37 +146,7 @@
 </template>
 
 <style scoped>
-.side-bar-option{
-  padding: 10px;
-  border-radius: 5px;
-  width: 100%;
-  display: flex;
-  background-color: #EEEEEE;
-  color:grey; 
-  font-size:0.8rem;
-}
-.side-object {
-  background-color: #fff;
-  padding: 10px;
-  border-radius: 5px;
-  -webkit-box-shadow: 1px 1px 3px 1px rgba(0, 0, 0, 0.03);
-  -moz-box-shadow: 1px 1px 3px 1px rgba(0, 0, 0, 0.03);
-  box-shadow: 1px 1px 3px 1px rgba(0, 0, 0, 0.03);
-}
-.No {
-  width: 43px;
-  height: 43px;
-  border-radius: 50%;
-  border: solid 1px #28a745;
-  color: #000;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-family: "iranSans";
-}
-.episode {
-  font-family: "Yekan", "iranSans";
-}
+
 a {
   text-decoration: none;
   color: #000;
@@ -191,7 +161,7 @@ a:hover {
 }
 .content > header {
   width: 100%;
-  height: 600px;
+  
 }
 #title {
   width: 100%;
@@ -241,12 +211,44 @@ a:hover {
   -moz-box-shadow: 1px 1px 3px 1px rgba(0, 0, 0, 0.03);
   box-shadow: 1px 1px 3px 1px rgba(0, 0, 0, 0.03);
   line-height: 2rem;
-
   color: #212121;
-  font-family: "Yekan";
+  opacity: 0.9;
+  text-align: justify;
 }
 #description > p {
   font-size: 0.95rem;
+  
+}
+.side-bar-option{
+  padding: 10px;
+  border-radius: 5px;
+  width: 100%;
+  display: flex;
+  background-color: #f5f5f5;
+  color:grey; 
+  font-size:0.8rem;
+}
+.side-object {
+  background-color: #fff;
+  padding: 10px;
+  border-radius: 5px;
+  -webkit-box-shadow: 1px 1px 3px 1px rgba(0, 0, 0, 0.03);
+  -moz-box-shadow: 1px 1px 3px 1px rgba(0, 0, 0, 0.03);
+  box-shadow: 1px 1px 3px 1px rgba(0, 0, 0, 0.03);
+}
+.No {
+  width: 43px;
+  height: 43px;
+  border-radius: 50%;
+  border: solid 2px #28a745;
+  color: #000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: "iranSans";
+}
+.episode {
+  font-family: "Yekan", "iranSans";
 }
 </style>
 

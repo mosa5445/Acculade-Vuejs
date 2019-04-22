@@ -174,7 +174,7 @@ export default {
       
         const res = await axios({
           method: "delete",
-          url: `http://localhost:4000/admin/courses/remove`,
+          url: `http://localhost:4000/admin/course`,
           headers: {
             token: token
           },
@@ -216,7 +216,7 @@ export default {
       let token = localStorage.getItem("auth");
       const res = await axios({
         method: "get",
-        url: "http://localhost:4000/courses-info",
+        url: "http://localhost:4000/course",
        
       });
       this.courses = res.data.courses.docs;
