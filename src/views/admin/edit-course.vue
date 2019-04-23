@@ -92,6 +92,11 @@
             </div>
             <p v-if="err.price" class="my-3" style="color:red;font-size:0.8rem;">{{err.price}}</p>
 
+            <div class="custom-control custom-switch my-4 status">
+              <input type="checkbox" class="custom-control-input" id="status" v-model="status">
+              <label class="custom-control-label" for="status">وضعیت دوره: {{status ? 'تکمیل شده' : "در حال برگزاری"}}</label>
+            </div>
+
             <select name="cars" class="custom-select mt-2 mb-5" v-model="type">
               <option selected>نوع دوره</option>
               <option value="free">رایگان</option>
@@ -175,6 +180,16 @@
 </template>
 
 <style scoped>
+.status {
+  text-align:center; 
+  width: 100%;
+  padding: 10px;
+  background-color: #eeeeee;
+  border-radius: 5px;
+  -webkit-box-shadow: 1px 1px 2px 2px rgba(0, 0, 0, 0.02);
+  -moz-box-shadow: 1px 1px 2px 2px rgba(0, 0, 0, 0.02);
+  box-shadow: 1px 1px 2px 2px rgba(0, 0, 0, 0.02);
+}
 .form-control {
   text-align: center;
 }

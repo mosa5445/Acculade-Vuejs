@@ -10,6 +10,7 @@ export const data = {
           price: "",
           tag: "",
           time: "",
+          status: false,
           episodePage: false,
           changePictureBtnMsg: "میخوام تصویر را ویرایش کنم",
           thumbnail: "",

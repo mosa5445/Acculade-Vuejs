@@ -52,7 +52,14 @@
               ref="image"
             >
             <p v-if="err.file" class="mb-3" style="color:red;font-size:0.8rem;">{{err.file}}</p>
+
             <input type="text" class="form-control my-3" placeholder="برچسب ها" v-model="tag">
+
+            <div class="custom-control custom-switch my-4 status">
+              <input type="checkbox" class="custom-control-input" id="status" v-model="status">
+              <label class="custom-control-label" for="status">وضعیت دوره: {{status ? 'تکمیل شده' : "در حال برگزاری"}}</label>
+            </div>
+            
             <select name="cars" class="custom-select" v-model="type">
               <option selected>نوع دوره</option>
               <option value="free">رایگان</option>
@@ -188,6 +195,16 @@
 ::-ms-input-placeholder {
   /* Microsoft Edge */
   text-align: center !important;
+}
+.status {
+  text-align: center;
+  width: 100%;
+  padding: 10px;
+  background-color: #eeeeee;
+  border-radius: 5px;
+  -webkit-box-shadow: 1px 1px 2px 2px rgba(0, 0, 0, 0.02);
+  -moz-box-shadow: 1px 1px 2px 2px rgba(0, 0, 0, 0.02);
+  box-shadow: 1px 1px 2px 2px rgba(0, 0, 0, 0.02);
 }
 #list {
   margin: auto;

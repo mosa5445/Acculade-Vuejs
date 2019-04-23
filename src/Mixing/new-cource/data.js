@@ -2,6 +2,7 @@ export const data = {
   data() {
     return {
       nextPage: false,
+      status: false,
       episodes: [
         {
           title: "",

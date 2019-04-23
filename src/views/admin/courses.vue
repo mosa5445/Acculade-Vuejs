@@ -11,7 +11,7 @@
               <div
                 class="d-flex align-items-center justify-content-around flex-wrap col-lg-10 col-12"
               >
-                <div class="item col-md-4 col-sm-12">
+                <div class="item col-md-3 col-sm-12">
                   <div class="d-flex flex-column">
                     <span class="title">نام دوره</span>
                     <span class="info">{{course.title}}</span>
@@ -25,14 +25,14 @@
                   </div>
                 </div>
 
-                <div class="item col-md-3 col-sm-4">
+                <div class="item col-md-2 col-sm-4">
                   <div class="d-flex flex-column">
                     <span class="title">زمان دوره</span>
                     <span class="info">{{ course.time }}</span>
                   </div>
                 </div>
 
-                <div class="item col-md-3 col-sm-4">
+                <div class="item col-md-2 col-sm-4">
                   <div class="d-flex flex-column">
                     <span class="title">بازدید دوره</span>
                     <span class="info">{{ course.viewCount }}</span>
@@ -163,45 +163,52 @@ export default {
     //remove course function
     async remove(id) {
       try {
-      this.$confirm('بعد از حذف دوره  اطلاعات قابل بازیابی نخواهند بود', 'برای حذف دوره اطمنیان داری؟', {
-          confirmButtonText: 'مطمعنم',
-          cancelButtonText: 'بیخیال',
-          type: 'warning',
-          center: true
-        }).then(async () => {
-          this.loading = true;
-      let token = localStorage.getItem("auth");
-      
-        const res = await axios({
-          method: "delete",
-          url: `http://localhost:4000/admin/course`,
-          headers: {
-            token: token
-          },
-          data: {
-            id
+        this.$confirm(
+          "بعد از حذف دوره  اطلاعات قابل بازیابی نخواهند بود",
+          "برای حذف دوره اطمنیان داری؟",
+          {
+            confirmButtonText: "مطمعنم",
+            cancelButtonText: "بیخیال",
+            type: "warning",
+            center: true
           }
-        });       
-        this.serverSuccess = true;
-          this.$message({
-            type: 'success',
-            message: 'دوره با موفقیت پاک شد'
+        )
+          .then(async () => {
+            this.loading = true;
+            let token = localStorage.getItem("auth");
+
+            const res = await axios({
+              method: "delete",
+              url: `http://localhost:4000/admin/course`,
+              headers: {
+                token: token
+              },
+              data: {
+                id
+              }
+            });
+            this.$message({
+              type: "success",
+              message: "دوره با موفقیت پاک شد"
+            });
+            this.page(1);
+             this.loading = false;
+          })
+          .catch(() => {
+            this.$message({
+              type: "info",
+              message: "دوره حذف نشد"
+            });
+             this.loading = false;
           });
-        }).catch(() => {
-          this.$message({
-            type: 'info',
-            message: 'حذف دوره لغو شد'
-          });
-        });
-      
-        setTimeout(() => (this.serverSuccess = false), 3000);
       } catch (err) {
-         this.$message({
-            type: 'danger',
-            message: 'حذف دوره با خطا مواجه شد'
-          });
+        this.$message({
+          type: "danger",
+          message: "حذف دوره با خطا مواجه شد"
+        });
+         this.loading = false;
       }
-      this.loading = false;
+     
     },
 
     //edit course function
@@ -209,15 +216,14 @@ export default {
       this.$router.push(`/admin/edit-course/${id}/${slug}`);
     }
   },
-  
+
   async created() {
     this.loading = true;
     try {
       let token = localStorage.getItem("auth");
       const res = await axios({
         method: "get",
-        url: "http://localhost:4000/course",
-       
+        url: "http://localhost:4000/course"
       });
       this.courses = res.data.courses.docs;
       this.totalPages = res.data.courses.totalPages;

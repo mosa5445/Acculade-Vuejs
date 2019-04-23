@@ -91,6 +91,7 @@ export const submit = {
                     formData.append("type", this.type);
                     formData.append("price", this.price);
                     formData.append("content", this.content);
+                    formData.append("status", this.status);
                     formData.append("tag", this.tag);
                     formData.append("preview", this.preview);
                     formData.append("slug", this.slug);
@@ -154,6 +155,7 @@ export const submit = {
                                 content: this.content,
                                 tag: this.tag,
                                 slug: this.slug,
+                                status: this.status,
                                 episodes: this.episodes,
                                 time: this.time,
                                 preview: this.preview,
