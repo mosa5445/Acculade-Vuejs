@@ -80,6 +80,7 @@
                 <!-- Episodes -->
                 <section class="episodes" v-if="episode">
                   <div v-for="(episode , index) in course.episodes" :key="episode._id">
+                    <a :href="episode.url">
                     <div class="episode d-flex align-items-center justify-content-between">
                       <div class="d-flex align-items-center">
                         <div class="No mx-2 my-1">{{index}}</div>
@@ -93,6 +94,7 @@
                         </span>
                       </div>
                     </div>
+                    </a>
                   </div>
                 </section>
               </div>
@@ -298,6 +300,7 @@ export default {
         url: `http://localhost:4000/course/${slug}`
       });
       this.course = res.data;
+      console.log(res.data);
     } catch (err) {
       console.log(err.response);
       this.err = true;

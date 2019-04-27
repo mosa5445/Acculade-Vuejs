@@ -13,7 +13,7 @@
         <div style="text-align:center;">
           <span v-if="!loading && err">خطا در برقراری ارتباط با سرور</span>
           <span v-if="courses.length == 0 && !err && !loading">هیچ دوره ای یافت نشد</span>
-          <span class="spinner-border spinner-border-md" v-if="loading"></span>
+          <!-- <span class="spinner-border spinner-border-md" v-if="loading"></span> -->
           <div v-if="loading" class="d-flex flex-wrap mt-3 mb-5">
             <div class="col-lg-4 col-sm-12">
               <div class="pre-course">
